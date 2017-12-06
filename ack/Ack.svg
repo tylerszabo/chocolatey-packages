@@ -1,0 +1,15 @@
+<svg height="128px" width="128px" xmlns="http://www.w3.org/2000/svg">
+<g>
+  <title>Background</title>
+  <rect fill="#fff" id="canvas_background" height="100%" width="100%" y="0" x="0"/>
+</g>
+<g>
+  <title>Ack! Logo</title>
+    <text x="0" y="0" xml:space="preserve" fill="black" font-weight="bold" font-family="'Courier New', Courier, monospace" font-size="24" >
+      <tspan x=".6em" dy="1.2em">_   /| </tspan>
+      <tspan x=".6em" dy="1.2em">\'o.O' </tspan>
+      <tspan x=".6em" dy="1.2em">=(___)=</tspan>
+      <tspan x=".6em" dy="1.2em">   U   </tspan>
+    </text>
+  </g>
+</svg>

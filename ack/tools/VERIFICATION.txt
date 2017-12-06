@@ -1,0 +1,13 @@
+﻿VERIFICATION
+
+The hash correct hash can be verified by independently downloading the file from the official distribution location (https://beyondgrep.com/ack-2.18-single-file) and by checking VirusTotal's hash of the official distribution URL (https://www.virustotal.com/#/url/b90cb60bc15b92441f3f9043efd8a5f2e77304441abca9fcfe3f74433570be11/detection)
+
+Generate a local hash with one of the following commands:
+
+PowerShell: Get-FileHash -Path tools\ack.pl -Algorithm SHA256
+Chocolatey: %ChocolateyInstall%\tools\checksum.exe -t=sha256 tools\ack.pl
+Cygwin:     sha256sum tools/ack.pl
+
+Verify it matches the following:
+
+6e41057c8f50f661d800099471f769209480efa53b8a886969d7ec6db60a2208 *tools/ack.pl

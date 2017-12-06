@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>ack</id>
+    <version>2.18</version>
+    <packageSourceUrl>https://github.com/tylerszabo/chocolatey-packages</packageSourceUrl>
+    <owners>Tyler Szabo</owners>
+
+    <title>Ack!</title>
+    <authors>Andy Lester</authors>
+    <projectUrl>https://beyondgrep.com/</projectUrl>
+    <copyright>Ack is copyright 2005-2017 Andy Lester, andy@petdance.com</copyright>
+    <licenseUrl>https://github.com/beyondgrep/ack2/blob/2.18/LICENSE.md</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectSourceUrl>https://github.com/petdance/ack2</projectSourceUrl>
+    <docsUrl>https://beyondgrep.com/documentation/</docsUrl>
+    <mailingListUrl>https://beyondgrep.com/community/</mailingListUrl>
+    <bugTrackerUrl>https://github.com/petdance/ack2/issues</bugTrackerUrl>
+    <tags>ack grep perl beyondgrep</tags>
+    <summary>ack is a code-searching tool, similar to grep but optimized for programmers searching large trees of source code. It runs in pure Perl, is highly portable, and runs on any platform that runs Perl.</summary>
+    <description>#ack 2.18 is a tool like grep, optimized for programmers
+
+Designed for programmers with large heterogeneous trees of source code, ack is written purely in portable Perl 5 and takes advantage of the power of Perl's regular expressions.
+    </description>
+    <releaseNotes>Below are the changes in ack 2.18. Find a change list that includes changes in past versions [here](https://github.com/beyondgrep/ack2/blob/2.18/Changes).
+
+2.18    Fri Mar 24 14:53:19 CDT 2017
+====================================
+ack 2.18 will probably be the final release in the ack 2.x series.
+I'm going to be starting work on ack 3.000 in earnest.  Still,
+if you discover problems with ack 2, please report them to
+[https://github.com/petdance/ack2/issues](https://github.com/petdance/ack2/issues)
+
+If you're interested in ack 3 development, please sign up
+for the ack-dev mailing list and/or join the ack Slack.  See
+[https://beyondgrep.com/community/](https://beyondgrep.com/community/) for details.
+
+##[INTERNALS]
+Removed the abstraction of App::Ack::Resource and its subclass
+App::Ack::Resource::Basic.  We are abandoning the idea that we'll have
+plugins.</releaseNotes>
+
+    <dependencies>
+      <dependency id="StrawberryPerl" version="[5.0, ]" />
+    </dependencies>
+  </metadata>
+
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+
+</package>
