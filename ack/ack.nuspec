@@ -10,7 +10,7 @@
     <authors>Andy Lester</authors>
     <projectUrl>https://beyondgrep.com/</projectUrl>
     <iconUrl>https://cdn.rawgit.com/tylerszabo/chocolatey-packages/5509c08b61c2272b7230370fe1801b78922786aa/ack/Ack.png</iconUrl>
-    <copyright>Ack is copyright 2005-2017 Andy Lester, andy@petdance.com</copyright>
+    <copyright>Copyright 2005-2017 Andy Lester</copyright>
     <licenseUrl>https://github.com/beyondgrep/ack2/blob/2.18/LICENSE.md</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <projectSourceUrl>https://github.com/petdance/ack2</projectSourceUrl>
