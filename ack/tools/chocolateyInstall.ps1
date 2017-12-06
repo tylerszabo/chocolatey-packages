@@ -14,7 +14,7 @@ Install-BinFile -Name "ack" -Path $AckCmd
 $OldAckBinfile = Join-Path -Path $env:ChocolateyInstall -ChildPath "bin\ack.cmd"
 $OldAckBinfileRegex = "^perl\.exe .*ack\.pl %\*$"
 
-if ((Get-Content -Path $OldAckBinfile -ErrorAction SilentlyContinue)[-1] -match $OldAckBinfileRegex) {
+if ((Get-Content -Path $OldAckBinfile -ErrorAction SilentlyContinue | Select-Object -Last 1) -match $OldAckBinfileRegex) {
   Write-Host "Removing pre-2.18 launcher: $OldAckBinfile"
   Remove-Item -Path "$OldAckBinfile"
 }
