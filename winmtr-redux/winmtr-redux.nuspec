@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>winmtr-redux</id>
+    <version>1.00</version>
+    <packageSourceUrl>https://github.com/tylerszabo/chocolatey-packages</packageSourceUrl>
+    <owners>Tyler Szabo</owners>
+    <title>WinMTR (Redux)</title>
+    <authors>White-Tiger, Appnor</authors>
+    <projectUrl>https://github.com/White-Tiger/WinMTR</projectUrl>
+    <copyright>Copyright 2010-2011 Appnor MSP</copyright>
+    <licenseUrl>https://github.com/White-Tiger/WinMTR/blob/v1.0/LICENSE</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectSourceUrl>https://github.com/White-Tiger</projectSourceUrl>
+    <bugTrackerUrl>https://github.com/White-Tiger/WinMTR/issues</bugTrackerUrl>
+    <tags>winmtr-redux winmtr mtr traceroute tracert ping</tags>
+    <summary>WinMTR is a Windows application which combines the functionality of the traceroute and ping utilities in a single network diagnostic tool.</summary>
+    <description>WinMTR (Redux)
+==============
+**WinMTR (Redux)** in an extended fork of [Appnor's WinMTR](http://winmtr.net/) ([sourceforge](http://sourceforge.net/projects/winmtr/)) with IPv6 support and other different enhancements and bug fixes</description>
+    <releaseNotes>-------------------
++ added IPv6 support
+- removed Windows 2000 support (kind of... can be added again with ease I guess)
++ hop information / properties can still be viewed if state is "stopped" or "stopping"
+* added start delay of about 30ms before starting to ping next hop (should improve performance)
+! fixed trace/hop list freeze (one of them being the use of _beginthread and not _beginthreadex and waiting for it's handles...)
+* theme support (now uses OS's default theme instead of Win98
+! other minor or critical fixes (such as leaks)</releaseNotes>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>
