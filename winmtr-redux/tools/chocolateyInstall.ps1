@@ -11,7 +11,7 @@ $packageArgs = @{
 
 Install-ChocolateyZipPackage @packageArgs
 
-$StartMenuDir = Get-ItemPropertyValue -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name "Common Programs"
+$StartMenuDir = (Get-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name "Common Programs") | Select-Object -ExpandProperty "Common Programs"
 
 if ($env:ChocolateyForceX86 -or (-not [Environment]::Is64BitOperatingSystem)) {
   $TargetExe = Join-Path -Path $toolsDir -ChildPath "WinMTR.exe"
