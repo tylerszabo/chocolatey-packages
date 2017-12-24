@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>sysinternals-starmenushortcuts</id>
+    <version>0.0.20171223</version>
+    <owners>Tyler Szabo</owners>
+    <packageSourceUrl>https://github.com/tylerszabo/chocolatey-packages</packageSourceUrl>
+    <title>SysInternals Start Menu Shortcuts</title>
+    <authors>Tyler Szabo</authors>
+    <projectUrl>https://github.com/tylerszabo/chocolatey-packages</projectUrl>
+    <licenseUrl>http://www.gnu.org/licenses/gpl-2.0.html</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectSourceUrl>https://github.com/tylerszabo/chocolatey-packages</projectSourceUrl>
+    <tags>sysinternals shortcut links</tags>
+    <summary>Start Menu Shortcuts for SysInternals</summary>
+    <description>Start Menu Shortcuts for SysInternals</description>
+    <releaseNotes />
+    <dependencies>
+      <dependency id="sysinternals"/>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>
