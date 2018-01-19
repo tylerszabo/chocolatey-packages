@@ -18,6 +18,10 @@ Param (
   [string]
   $OutputDirectory = $PSScriptRoot,
 
+  [ValidateNotNullOrEmpty()]
+  [string]
+  $InputDirectory = $PSScriptRoot,
+
   [switch]
   $Force = $False,
 
@@ -28,7 +32,7 @@ Param (
   $WhatIf = $False
 )
 
-Get-ChildItem -LiteralPath $OutputDirectory -Recurse -Filter "*.nuspec" | Where-Object {
+Get-ChildItem -LiteralPath $InputDirectory -Recurse -Filter "*.nuspec" | Where-Object { -not ($_.Directory.Name -eq "template") } | Where-Object {
   if ($Force) { Return $True }
 
   [xml]$NuSpecXML = $_ | Get-Content

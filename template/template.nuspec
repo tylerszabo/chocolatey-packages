@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>FIXME</id>
+    <version>FIXME</version>
+    <packageSourceUrl>https://github.com/tylerszabo/chocolatey-packages</packageSourceUrl>
+    <owners>Tyler Szabo</owners>
+    <title>FIXME</title>
+    <authors>FIXME</authors>
+    <projectUrl>FIXME Software Homepage</projectUrl>
+    <iconUrl>FIXME http://cdn.rawgit.com/...</iconUrl>
+    <copyright>FIXME Year Software Vendor</copyright>
+    <licenseUrl>FIXME License</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectSourceUrl>FIXME Optional Source</projectSourceUrl>
+    <docsUrl>FIXME Optional Documentation</docsUrl>
+    <mailingListUrl>FIXME mailing list</mailingListUrl>
+    <bugTrackerUrl>FIXME bug DB</bugTrackerUrl>
+    <tags>FIXME</tags>
+    <summary>FIXME OneLiner</summary>
+    <description>FIXME Markdown Description</description>
+    <releaseNotes>FIXME Markdown Optional Release Notes</releaseNotes> 
+    <dependencies>
+      <dependency id="" version="[_MIN_VERSION_INCLUSIVE, MAX_VERSION_EXCLUSIVE)" />
+      <dependency id="chocolatey-core.extension" version="1.1.0" />
+    </dependencies>-->
+    <!-- chocolatey-core.extension - https://chocolatey.org/packages/chocolatey-core.extension
+         - You want to use Get-UninstallRegistryKey on less than 0.9.10 (in chocolateyUninstall.ps1)
+         - You want to use Get-PackageParameters and on less than 0.11.0
+         - You want to take advantage of other functions in the core community maintainer's team extension package
+    -->
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>
