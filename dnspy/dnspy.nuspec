@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>dnspy</id>
+    <version>4.5.2</version>
+    <packageSourceUrl>https://github.com/tylerszabo/chocolatey-packages</packageSourceUrl>
+    <owners>Tyler Szabo</owners>
+    <title>dnSpy</title>
+    <authors>0xd4d, Ki</authors>
+    <projectUrl>https://github.com/0xd4d/dnSpy</projectUrl>
+    <licenseUrl>https://github.com/0xd4d/dnSpy/blob/v4.5.2/dnSpy/dnSpy/LicenseInfo/GPLv3.txt</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectSourceUrl>https://github.com/0xd4d/dnSpy/</projectSourceUrl>
+    <bugTrackerUrl>https://github.com/0xd4d/dnSpy/issues</bugTrackerUrl>
+    <tags>dnspy ollydbg x64dbg csharp dotnet decompiler</tags>
+    <description>dnSpy is a debugger and .NET assembly editor. You can use it to edit and debug assemblies even if you don't have any source code available.</description>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>
