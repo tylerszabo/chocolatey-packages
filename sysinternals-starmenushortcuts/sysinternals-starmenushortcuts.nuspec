@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>sysinternals-starmenushortcuts</id>
-    <version>0.0.20171223</version>
+    <version>0.0.20180109</version>
     <owners>Tyler Szabo</owners>
     <packageSourceUrl>https://github.com/tylerszabo/chocolatey-packages</packageSourceUrl>
     <title>SysInternals Start Menu Shortcuts</title>

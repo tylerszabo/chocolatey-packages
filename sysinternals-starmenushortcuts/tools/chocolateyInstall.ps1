@@ -12,9 +12,10 @@ If (-Not (Test-Path -Path $ShortcutDir)) {
 }
 
 @(
-  @("procexp", "Process Explorer"),
+  @("autoruns", "Autoruns"),
+  @("disk2vhd", "Disk2VHD"),
   @("procmon", "Process Monitor"),
-  @("disk2vhd", "Disk2VHD")
+  @("procexp", "Process Explorer")
 ) | ForEach-Object {
   $TargetExe = Get-Item -Path (Join-Path -Path $SysInternalsDir -ChildPath "$($_[0]).exe") -ErrorAction SilentlyContinue
   If ($TargetExe) {
