@@ -1,6 +1,8 @@
 ﻿VERIFICATION
 
-The hash correct hash can be verified by independently downloading the file from the official distribution location (https://beyondgrep.com/ack-2.20-single-file) and by checking VirusTotal's hash of the official distribution URL (https://www.virustotal.com/#/url/34b9980c3ecb3953e9c93a4b3fcca3d4c2ca0a1e3a7b6d3240e06848a1580a6b/detection)
+The hash correct hash can be verified by independently downloading the file from the official distribution location:
+
+https://beyondgrep.com/ack-2.22-single-file
 
 Generate a local hash with one of the following commands:
 
@@ -10,4 +12,4 @@ Cygwin:     sha256sum tools/ack.pl
 
 Verify it matches the following:
 
-fcdf3babf4264d126b362c9116eade83fe76f844f5de8f4150e54e0e83702e16 *tools/ack.pl
+fd0617585b88517a3d41d3d206c1dc38058c57b90dfd88c278049a41aeb5be38 *tools/ack.pl
