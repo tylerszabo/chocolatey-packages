@@ -8,6 +8,7 @@
     <title>dnSpy</title>
     <authors>0xd4d, Ki</authors>
     <projectUrl>https://github.com/0xd4d/dnSpy</projectUrl>
+    <iconUrl>https://cdn.rawgit.com/tylerszabo/chocolatey-packages/b6722d7e8cd0b727667448894529aee05fba18ef/dnspy/dnSpy.png</iconUrl>
     <licenseUrl>https://github.com/0xd4d/dnSpy/blob/v4.5.2/dnSpy/dnSpy/LicenseInfo/GPLv3.txt</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <projectSourceUrl>https://github.com/0xd4d/dnSpy/</projectSourceUrl>
