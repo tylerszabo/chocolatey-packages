@@ -12,7 +12,7 @@
     <copyright>Copyright 2010-2011 Appnor MSP</copyright>
     <licenseUrl>https://github.com/White-Tiger/WinMTR/blob/v1.0/LICENSE</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <projectSourceUrl>https://github.com/White-Tiger</projectSourceUrl>
+    <projectSourceUrl>https://github.com/White-Tiger/WinMTR</projectSourceUrl>
     <bugTrackerUrl>https://github.com/White-Tiger/WinMTR/issues</bugTrackerUrl>
     <tags>winmtr-redux winmtr mtr traceroute tracert ping</tags>
     <summary>WinMTR is a Windows application which combines the functionality of the traceroute and ping utilities in a single network diagnostic tool.</summary>
