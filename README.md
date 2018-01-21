@@ -14,9 +14,9 @@ Sources for [Chocolatey](https://chocolatey.org/) packages.
 These versions are unpublished forks
 
 * [OpenHardwareMonitor](https://chocolatey.org/packages/openhardwaremonitor)
-* [HexEdit](https://chocolatey.org/packages/hexedit)
 * [dnSpy](https://chocolatey.org/packages/dnspy)
 
 ## Unlisted
 
 * SysInternals Start Menu Shortcuts
+* Andrew Phillips' HexEdit (differs from "[hexedit](https://chocolatey.org/packages/hexedit)")
