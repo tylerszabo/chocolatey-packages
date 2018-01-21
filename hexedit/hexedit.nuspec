@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>hexedit</id>
+    <version>5.0</version>
+    <packageSourceUrl>https://github.com/tylerszabo/chocolatey-packages</packageSourceUrl>
+    <owners>Tyler Szabo</owners>
+    <title>HexEdit</title>
+    <authors>Andrew W. Phillips</authors>
+    <projectUrl>http://hexedit.com</projectUrl>
+    <copyright>© 2016 Andrew W. Phillips</copyright>
+    <licenseUrl>https://github.com/AndrewWPhillips/HexEdit/blob/master/LICENSE</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectSourceUrl>https://github.com/AndrewWPhillips/HexEdit</projectSourceUrl>
+    <bugTrackerUrl>https://github.com/AndrewWPhillips/HexEdit/issues</bugTrackerUrl>
+    <tags>hex editor hexeditor</tags>
+    <summary>A free Windows binary editor</summary>
+    <description>
+An overriding principle in the design of Hex Edit has been to keep the user interface as simple and uncluttered as possible. It is a common failing of other hex editors that they assume an advanced user who uses the program every day with bulging menus full of rarely used features.
+
+That's why the menus are short (apart from the Operations menu which has many similar items), and each Options page does not have more than 10 options.
+
+The idea is that the user interface is not overwhelming. An infrequent user (as users of hex editors often are) can use the program without constantly referring to the help. Of course, if you need it there is lots of help available.
+    </description>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>
