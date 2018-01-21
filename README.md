@@ -11,7 +11,11 @@ Sources for [Chocolatey](https://chocolatey.org/) packages.
 
 ## Unpublished
 
-* [OpenHardwareMonitor](https://chocolatey.org/packages/openhardwaremonitor) - This version is an unpublished fork
+These versions are unpublished forks
+
+* [OpenHardwareMonitor](https://chocolatey.org/packages/openhardwaremonitor)
+* [HexEdit](https://chocolatey.org/packages/hexedit)
+* [dnSpy](https://chocolatey.org/packages/dnspy)
 
 ## Unlisted
 
