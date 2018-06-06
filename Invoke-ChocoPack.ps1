@@ -32,7 +32,12 @@ Param (
   $WhatIf = $False
 )
 
+Write-Verbose "InputDirectory: $InputDirectory"
+Write-Verbose "OutputDirectory: $OutputDirectory"
+
 Get-ChildItem -LiteralPath $InputDirectory -Recurse -Filter "*.nuspec" | Where-Object { -not ($_.Directory.Name -eq "template") } | Where-Object {
+  Write-Verbose "Inspecting $($_.FullName)"
+
   if ($Force) { Return $True }
 
   [xml]$NuSpecXML = $_ | Get-Content
@@ -50,6 +55,7 @@ Get-ChildItem -LiteralPath $InputDirectory -Recurse -Filter "*.nuspec" | Where-O
         Return $False
       }
     } else {
+      Write-Verbose "Not overwriting $($ComputedOutFile.FullName)"
       Return $False
     }
 
