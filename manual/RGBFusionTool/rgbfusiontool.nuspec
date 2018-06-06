@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>rgbfusiontool</id>
+    <version>0.9.1.0</version>
+    <packageSourceUrl>https://github.com/tylerszabo/chocolatey-packages</packageSourceUrl>
+    <owners>Tyler Szabo</owners>
+    <title>RGB Fusion Tool</title>
+    <authors>Tyler Szabo</authors>
+    <projectUrl>https://github.com/tylerszabo/RGB-Fusion-Tool</projectUrl>
+    <copyright>© 2018 Tyler Szabo</copyright>
+    <licenseUrl>https://github.com/tylerszabo/RGB-Fusion-Tool/blob/v0.9.1/LICENSE</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectSourceUrl>https://github.com/tylerszabo/RGB-Fusion-Tool</projectSourceUrl>
+    <bugTrackerUrl>https://github.com/tylerszabo/RGB-Fusion-Tool/issues</bugTrackerUrl>
+    <tags>gigabyte rgbfusion rgb motherboard</tags>
+    <summary>RGB Fusion Tool is a CLI tool for setting LEDs on Gigabyte motherboards supporting RGB Fusion.</summary>
+    <description>
+## Running
+
+`RGBFusionTool` is a command line tool. For usage instructions run:
+
+```
+RGBFusionTool.exe --help
+```
+
+### Examples
+
+Set all zones to red (50% brightness)
+
+```
+RGBFusionTool.exe --static=Red --brightness 50
+```
+
+Color cycle with 2 second transitions in zone 0
+
+```
+RGBFusionTool.exe --zone=0 --colorcycle=2
+```
+
+List zones
+
+```
+RGBFusionTool.exe --list
+```
+
+Set zones 0 through 3 to color cycle at different speeds (with verbose output)
+
+```
+RGBFusionTool.exe --verbose --zone=0 --cycle=32 --zone=1 --cycle=16 --zone=2 --cycle=8 --zone=3 --cycle=4
+```
+    </description>
+    <dependencies>
+      <dependency id="dotnet4.6" version="4.6" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>

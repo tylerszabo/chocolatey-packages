@@ -6,15 +6,16 @@ Sources for [Chocolatey](https://chocolatey.org/) packages.
 ## Published
 
 * [Ack](https://chocolatey.org/packages/ack)
-* [WinMTR (Redux)](https://chocolatey.org/packages/winmtr-redux)
+* [RGB Fusion Tool](https://chocolatey.org/packages/rgbfusiontool)
 * [WinMerge 7-Zip Plugin](https://chocolatey.org/packages/winmerge-7z)
+* [WinMTR (Redux)](https://chocolatey.org/packages/winmtr-redux)
 
 ## Unpublished
 
 These versions are unpublished forks
 
-* [OpenHardwareMonitor](https://chocolatey.org/packages/openhardwaremonitor)
 * [dnSpy](https://chocolatey.org/packages/dnspy)
+* [OpenHardwareMonitor](https://chocolatey.org/packages/openhardwaremonitor)
 
 ## Unlisted
 
