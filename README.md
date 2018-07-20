@@ -6,6 +6,7 @@ Sources for [Chocolatey](https://chocolatey.org/) packages.
 ## Published
 
 * [Ack](https://chocolatey.org/packages/ack)
+* [jdupes](https://chocolatey.org/packages/jdupes)
 * [RGB Fusion Tool](https://chocolatey.org/packages/rgbfusiontool)
 * [WinMerge 7-Zip Plugin](https://chocolatey.org/packages/winmerge-7z)
 * [WinMTR (Redux)](https://chocolatey.org/packages/winmtr-redux)

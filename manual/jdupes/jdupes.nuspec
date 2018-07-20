@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>jdupes</id>
+    <version>1.10.2</version>
+    <packageSourceUrl>https://github.com/tylerszabo/chocolatey-packages</packageSourceUrl>
+    <owners>Tyler Szabo</owners>
+    <title>jdupes</title>
+    <authors>Jody Bruchon</authors>
+    <projectUrl>https://github.com/jbruchon/jdupes</projectUrl>
+    <copyright>Copyright 2015-2018 Jody Lee Bruchon and contributors</copyright>
+    <licenseUrl>https://github.com/jbruchon/jdupes/blob/v1.10.2/LICENSE</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectSourceUrl>https://github.com/jbruchon/jdupes</projectSourceUrl>
+    <bugTrackerUrl>https://github.com/jbruchon/jdupes/issues</bugTrackerUrl>
+    <tags>fdupes dupes dedupe find dupes</tags>
+    <summary>A powerful duplicate file finder and an enhanced fork of 'fdupes'. </summary>
+    <description>
+jdupes is a program for identifying and taking actions upon duplicate
+files. This fork known as 'jdupes' is heavily modified from and improved
+over the original. See CHANGES for details.
+
+A WORD OF WARNING: jdupes IS NOT a drop-in compatible replacement for
+fdupes! Do not blindly replace fdupes with jdupes in scripts and expect
+everything to work the same way. Option availability and meanings differ
+between the two programs. For example, the -I switch in jdupes means
+"isolate" and blocks intra-argument matching, while in fdupes it means
+"immediately delete files during scanning without prompting the user."
+    </description>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>
