@@ -2,14 +2,14 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
   <metadata>
     <id>rgbfusiontool</id>
-    <version>0.9.1.0</version>
+    <version>0.9.2.0</version>
     <packageSourceUrl>https://github.com/tylerszabo/chocolatey-packages</packageSourceUrl>
     <owners>Tyler Szabo</owners>
     <title>RGB Fusion Tool</title>
     <authors>Tyler Szabo</authors>
     <projectUrl>https://github.com/tylerszabo/RGB-Fusion-Tool</projectUrl>
     <copyright>© 2018 Tyler Szabo</copyright>
-    <licenseUrl>https://github.com/tylerszabo/RGB-Fusion-Tool/blob/v0.9.1/LICENSE</licenseUrl>
+    <licenseUrl>https://github.com/tylerszabo/RGB-Fusion-Tool/blob/v0.9.2/LICENSE</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <projectSourceUrl>https://github.com/tylerszabo/RGB-Fusion-Tool</projectSourceUrl>
     <bugTrackerUrl>https://github.com/tylerszabo/RGB-Fusion-Tool/issues</bugTrackerUrl>

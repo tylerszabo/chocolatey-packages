@@ -4,8 +4,8 @@ $toolsDir   = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
 $packageArgs = @{
   packageName   = $env:ChocolateyPackageName
   unzipLocation = $toolsDir
-  url           = 'https://github.com/tylerszabo/RGB-Fusion-Tool/releases/download/v0.9.1/RGBFusionTool_0.9.1.7z'
-  checksum      = '8c25bd393e0592ad170da79b5f2f9fb6df425985c508bb0b6a7479dcf3aa3ae3'
+  url           = 'https://github.com/tylerszabo/RGB-Fusion-Tool/releases/download/v0.9.2/RGBFusionTool_v0.9.2.7z'
+  checksum      = '4d091999ac6ea40a83573de1ab391176629a2d96207a6b28b56ebbacfdfa9e5e'
   checksumType  = 'sha256'
 }
 
