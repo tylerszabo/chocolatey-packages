@@ -55,6 +55,6 @@ RGBFusionTool.exe --verbose --zone=0 --cycle=32 --zone=1 --cycle=16 --zone=2 --c
     </dependencies>
   </metadata>
   <files>
-    <file src="tools\**" target="tools" />
+    <file src="tools\**" target="tools" exclude="**\.*.swp" />
   </files>
 </package>

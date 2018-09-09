@@ -29,6 +29,6 @@ between the two programs. For example, the -I switch in jdupes means
     </description>
   </metadata>
   <files>
-    <file src="tools\**" target="tools" />
+    <file src="tools\**" target="tools" exclude="**\.*.swp" />
   </files>
 </package>

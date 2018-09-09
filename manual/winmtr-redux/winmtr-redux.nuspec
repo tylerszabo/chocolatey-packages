@@ -29,6 +29,6 @@
 ! other minor or critical fixes (such as leaks)</releaseNotes>
   </metadata>
   <files>
-    <file src="tools\**" target="tools" />
+    <file src="tools\**" target="tools" exclude="**\.*.swp" />
   </files>
 </package>

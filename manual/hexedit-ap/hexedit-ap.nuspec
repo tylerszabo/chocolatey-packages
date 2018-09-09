@@ -25,6 +25,6 @@ The idea is that the user interface is not overwhelming. An infrequent user (as 
     </description>
   </metadata>
   <files>
-    <file src="tools\**" target="tools" />
+    <file src="tools\**" target="tools" exclude="**\.*.swp" />
   </files>
 </package>

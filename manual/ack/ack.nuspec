@@ -48,7 +48,7 @@ Sped up file type detection for certain files.
   </metadata>
 
   <files>
-    <file src="tools\**" target="tools" />
+    <file src="tools\**" target="tools" exclude="**\.*.swp" />
   </files>
 
 </package>
