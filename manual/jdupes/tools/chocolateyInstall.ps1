@@ -4,11 +4,11 @@ $toolsDir   = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
 $packageArgs = @{
   packageName   = $env:ChocolateyPackageName
   unzipLocation = $toolsDir
-  url           = 'https://github.com/jbruchon/jdupes/releases/download/v1.10.3/jdupes-1.10.3_win32.zip'
-  checksum      = 'c0da9cc58e49f17e3467a6bb933bd9da9d096aeb237f14e8263dfddd492ca200'
+  url           = 'https://github.com/jbruchon/jdupes/releases/download/v1.11/jdupes-1.11_win32.zip'
+  checksum      = 'c7b2631b617e41eb34d62c4ff9cbddd3bef194126932aca73e841297c1f1ae22'
   checksumType  = 'sha256'
-  url64bit      = 'https://github.com/jbruchon/jdupes/releases/download/v1.10.3/jdupes-1.10.3_win64.zip'
-  checksum64    = 'f98490dc40ef8f38976c7a946da3658f5f07693842defa3d5bc5828ca245b4e0'
+  url64bit      = 'https://github.com/jbruchon/jdupes/releases/download/v1.11/jdupes-1.11_win64.zip'
+  checksum64    = 'c8f7e6dd54540d44127fc6827eb9cd92e5fc509615f24f9c41ab76c389c4d4d0'
   checksumType64= 'sha256'
 }
 
