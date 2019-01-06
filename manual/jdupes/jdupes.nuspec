@@ -2,14 +2,14 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
   <metadata>
     <id>jdupes</id>
-    <version>1.10.3</version>
+    <version>1.11</version>
     <packageSourceUrl>https://github.com/tylerszabo/chocolatey-packages</packageSourceUrl>
     <owners>Tyler Szabo</owners>
     <title>jdupes</title>
     <authors>Jody Bruchon</authors>
     <projectUrl>https://github.com/jbruchon/jdupes</projectUrl>
     <copyright>Copyright 2015-2018 Jody Lee Bruchon and contributors</copyright>
-    <licenseUrl>https://github.com/jbruchon/jdupes/blob/v1.10.3/LICENSE</licenseUrl>
+    <licenseUrl>https://github.com/jbruchon/jdupes/blob/v1.11/LICENSE</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <projectSourceUrl>https://github.com/jbruchon/jdupes</projectSourceUrl>
     <bugTrackerUrl>https://github.com/jbruchon/jdupes/issues</bugTrackerUrl>
