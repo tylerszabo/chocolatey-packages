@@ -2,18 +2,18 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
   <metadata>
     <id>jdupes</id>
-    <version>1.11</version>
+    <version>1.12</version>
     <packageSourceUrl>https://github.com/tylerszabo/chocolatey-packages</packageSourceUrl>
     <owners>Tyler Szabo</owners>
     <title>jdupes</title>
     <authors>Jody Bruchon</authors>
     <projectUrl>https://github.com/jbruchon/jdupes</projectUrl>
     <copyright>Copyright 2015-2018 Jody Lee Bruchon and contributors</copyright>
-    <licenseUrl>https://github.com/jbruchon/jdupes/blob/v1.11/LICENSE</licenseUrl>
+    <licenseUrl>https://github.com/jbruchon/jdupes/blob/v1.12/LICENSE</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <projectSourceUrl>https://github.com/jbruchon/jdupes</projectSourceUrl>
     <bugTrackerUrl>https://github.com/jbruchon/jdupes/issues</bugTrackerUrl>
-    <tags>fdupes dupes dedupe find dupes</tags>
+    <tags>fdupes dupes dedupe find dupes cli foss cross-platform</tags>
     <summary>A powerful duplicate file finder and an enhanced fork of 'fdupes'. </summary>
     <description>
 jdupes is a program for identifying and taking actions upon duplicate
@@ -27,6 +27,12 @@ between the two programs. For example, the -I switch in jdupes means
 "isolate" and blocks intra-argument matching, while in fdupes it means
 "immediately delete files during scanning without prompting the user."
     </description>
+    <releaseNotes>
+  - Small reductions in memory usage
+  - Add "standalone" jdupes C file which has no external requirements
+  - Add ability to toggle -Z with a USR1 signal (not available on Windows)
+  - Add -t/-no-tocttou option to disable file change safety checks
+    </releaseNotes>
   </metadata>
   <files>
     <file src="tools\**" target="tools" exclude="**\.*.swp" />
