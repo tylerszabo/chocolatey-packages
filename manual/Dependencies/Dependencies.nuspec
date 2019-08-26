@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>dependencies</id>
+    <version>1.9</version>
+    <packageSourceUrl>https://github.com/tylerszabo/chocolatey-packages</packageSourceUrl>
+    <owners>Tyler Szabo</owners>
+    <title>Dependencies</title>
+    <authors>lucasg</authors>
+    <projectUrl>https://github.com/lucasg/Dependencies</projectUrl>
+    <copyright>2017 lucasg</copyright>
+    <licenseUrl>https://github.com/lucasg/Dependencies/blob/v1.9/LICENSE</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectSourceUrl>https://github.com/lucasg/Dependencies</projectSourceUrl>
+    <bugTrackerUrl>https://github.com/lucasg/Dependencies/issues</bugTrackerUrl>
+    <tags>foss depends dependency</tags>
+    <summary>A rewrite of the old legacy software "depends.exe" in C# for Windows devs to troubleshoot dll load dependencies issues.</summary>
+    <description>`Dependencies` is a rewrite of the legacy software [Dependency Walker](http://www.dependencywalker.com/) which was shipped along Windows SDKs, but whose development stopped around 2006.
+`Dependencies` can help Windows developers troubleshooting their dll load dependencies issues.</description>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>
