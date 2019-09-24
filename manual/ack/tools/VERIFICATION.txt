@@ -2,7 +2,7 @@
 
 The hash correct hash can be verified by independently downloading the file from the official distribution location:
 
-https://beyondgrep.com/ack-2.22-single-file
+https://beyondgrep.com/ack-v3.1.1
 
 Generate a local hash with one of the following commands:
 
@@ -12,4 +12,4 @@ Cygwin:     sha256sum tools/ack.pl
 
 Verify it matches the following:
 
-fd0617585b88517a3d41d3d206c1dc38058c57b90dfd88c278049a41aeb5be38 *tools/ack.pl
+2d7f87caf20a42770fec7956cf939100f8741bb3409d138d21f2d9f51d0beb7c *tools/ack.pl
