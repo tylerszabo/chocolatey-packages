@@ -2,19 +2,19 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
   <metadata>
     <id>jdupes</id>
-    <version>1.13.2</version>
+    <version>1.15.0</version>
     <packageSourceUrl>https://github.com/tylerszabo/chocolatey-packages</packageSourceUrl>
     <owners>Tyler Szabo</owners>
     <title>jdupes</title>
     <authors>Jody Bruchon</authors>
     <projectUrl>https://github.com/jbruchon/jdupes</projectUrl>
-    <copyright>Copyright 2015-2018 Jody Lee Bruchon and contributors</copyright>
-    <licenseUrl>https://github.com/jbruchon/jdupes/blob/v1.13.2/LICENSE</licenseUrl>
+    <copyright>Copyright 2015-2020 Jody Lee Bruchon and contributors</copyright>
+    <licenseUrl>https://github.com/jbruchon/jdupes/blob/v1.15.0/LICENSE</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <projectSourceUrl>https://github.com/jbruchon/jdupes</projectSourceUrl>
     <bugTrackerUrl>https://github.com/jbruchon/jdupes/issues</bugTrackerUrl>
     <tags>fdupes dupes dedupe find dupes cli foss cross-platform</tags>
-    <summary>A powerful duplicate file finder and an enhanced fork of 'fdupes'. </summary>
+    <summary>A powerful duplicate file finder and an enhanced fork of 'fdupes'.</summary>
     <description>
 jdupes is a program for identifying and taking actions upon duplicate
 files. This fork known as 'jdupes' is heavily modified from and improved
@@ -28,12 +28,12 @@ between the two programs. For example, the -I switch in jdupes means
 "immediately delete files during scanning without prompting the user."
     </description>
     <releaseNotes>
-- Add new option -j/--json for JSON (machine-readable) output
-- /usr/local is now the default PREFIX in Makefile
-- Minor performance optimizations
-- A few minor bug fixes
-- Fix Unicode and escapes in JSON output
-- Fix an incorrect NULL pointer check
+- **Disable single file addition on the command line for safety**
+- Long option --exclude is deprecated and renamed --extfilter
+- Fix the behavior of the -I/--isolate option
+- Fix FS dedupe only working on the first 16 MiB of files
+- Add FS dedupe static header for when this header is mising
+- Correct several copyright dates and comments
     </releaseNotes>
   </metadata>
   <files>
