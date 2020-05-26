@@ -8,7 +8,7 @@
     <title>WinMTR (Redux)</title>
     <authors>White-Tiger, Appnor</authors>
     <projectUrl>https://github.com/White-Tiger/WinMTR</projectUrl>
-    <iconUrl>https://cdn.rawgit.com/tylerszabo/chocolatey-packages/3cab977f196e9a0f67ef199a0fcc997c0c99377d/winmtr-redux/WinMTR.png</iconUrl>
+    <iconUrl>https://github.com/tylerszabo/chocolatey-packages/raw/3cab977f196e9a0f67ef199a0fcc997c0c99377d/winmtr-redux/WinMTR.png</iconUrl>
     <copyright>Copyright 2010-2011 Appnor MSP</copyright>
     <licenseUrl>https://github.com/White-Tiger/WinMTR/blob/v1.0/LICENSE</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>

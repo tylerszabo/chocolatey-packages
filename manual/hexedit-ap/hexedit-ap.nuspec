@@ -8,7 +8,7 @@
     <title>HexEdit</title>
     <authors>Andrew W. Phillips</authors>
     <projectUrl>http://hexedit.com</projectUrl>
-    <iconUrl>https://cdn.rawgit.com/tylerszabo/chocolatey-packages/c335113b5d0b03fc5846998da29188a293b97664/hexedit/hexedit.png</iconUrl>
+    <iconUrl>https://github.com/tylerszabo/chocolatey-packages/raw/c335113b5d0b03fc5846998da29188a293b97664/hexedit/hexedit.png</iconUrl>
     <copyright>© 2016 Andrew W. Phillips</copyright>
     <licenseUrl>https://github.com/AndrewWPhillips/HexEdit/blob/master/LICENSE</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>

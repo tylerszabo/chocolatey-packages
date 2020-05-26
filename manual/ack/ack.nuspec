@@ -9,7 +9,7 @@
     <title>Ack!</title>
     <authors>Andy Lester</authors>
     <projectUrl>https://beyondgrep.com/</projectUrl>
-    <iconUrl>https://cdn.rawgit.com/tylerszabo/chocolatey-packages/5509c08b61c2272b7230370fe1801b78922786aa/ack/Ack.png</iconUrl>
+    <iconUrl>https://github.com/tylerszabo/chocolatey-packages/raw/5509c08b61c2272b7230370fe1801b78922786aa/ack/Ack.png</iconUrl>
     <copyright>Copyright 2005-2019 Andy Lester</copyright>
     <licenseUrl>https://github.com/beyondgrep/ack3/blob/v3.1.1/LICENSE.md</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
