@@ -2,14 +2,14 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
   <metadata>
     <id>jdupes</id>
-    <version>1.15.0</version>
+    <version>1.16.0</version>
     <packageSourceUrl>https://github.com/tylerszabo/chocolatey-packages</packageSourceUrl>
     <owners>Tyler Szabo</owners>
     <title>jdupes</title>
     <authors>Jody Bruchon</authors>
     <projectUrl>https://github.com/jbruchon/jdupes</projectUrl>
     <copyright>Copyright 2015-2020 Jody Lee Bruchon and contributors</copyright>
-    <licenseUrl>https://github.com/jbruchon/jdupes/blob/v1.15.0/LICENSE</licenseUrl>
+    <licenseUrl>https://github.com/jbruchon/jdupes/blob/v1.16.0/LICENSE</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <projectSourceUrl>https://github.com/jbruchon/jdupes</projectSourceUrl>
     <bugTrackerUrl>https://github.com/jbruchon/jdupes/issues</bugTrackerUrl>
@@ -28,12 +28,10 @@ between the two programs. For example, the -I switch in jdupes means
 "immediately delete files during scanning without prompting the user."
     </description>
     <releaseNotes>
-- **Disable single file addition on the command line for safety**
-- Long option --exclude is deprecated and renamed --extfilter
-- Fix the behavior of the -I/--isolate option
-- Fix FS dedupe only working on the first 16 MiB of files
-- Add FS dedupe static header for when this header is mising
-- Correct several copyright dates and comments
+ - Add -X noext/onlyext filters to exclude/requite specific file extension(s)
+ - Added in-depth help text for -X/--extfilter (use -X help to view)
+ - Clarify hard link limit behavior on Windows in program help text
+ - This version still has BTRFS dedupe issues and file add-by-name disabled
     </releaseNotes>
   </metadata>
   <files>
