@@ -28,10 +28,14 @@ between the two programs. For example, the -I switch in jdupes means
 "immediately delete files during scanning without prompting the user."
     </description>
     <releaseNotes>
- - Add -X noext/onlyext filters to exclude/requite specific file extension(s)
- - Added in-depth help text for -X/--extfilter (use -X help to view)
- - Clarify hard link limit behavior on Windows in program help text
- - This version still has BTRFS dedupe issues and file add-by-name disabled
+ - Add -X newer/older extfilters to reject files by modification date
+ - Fix -X newer/older on Windows by writing a local strptime() substitute
+ - Rewrite dedupe code from scratch, probably fixing all dedupe bugs
+ - extfilter: add substring match filter for file paths
+ - Add -u/--printunique option to print all non-duplicates (unmatched files)
+ - Dedupe-blacklisted kernel version check now happens before work is done
+ - Build warnings fixed; report any you get (except ENABLE_DEDUPE=1 #warning)
+ - New build targets static and static_stripped (for static binary builds)
     </releaseNotes>
   </metadata>
   <files>
