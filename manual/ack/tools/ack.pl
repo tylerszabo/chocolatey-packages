@@ -15,8 +15,7 @@ package main;
 use strict;
 use warnings;
 
-use version;
-our $VERSION = version->declare( 'v3.1.1' ); # Check https://beyondgrep.com/ for updates
+our $VERSION = 'v3.4.0'; # Check https://beyondgrep.com/ for updates
 
 use 5.010001;
 
@@ -31,6 +30,7 @@ our $opt_B;
 our $opt_break;
 our $opt_color;
 our $opt_column;
+our $opt_debug;
 our $opt_c;
 our $opt_f;
 our $opt_g;
@@ -60,6 +60,11 @@ our $search_re;
 our $scan_re;
 
 our @special_vars_used_by_opt_output;
+
+our $using_ranges;
+
+# Internal stats for debugging.
+our %stats;
 
 MAIN: {
     $App::Ack::ORIGINAL_PROGRAM_NAME = $0;
@@ -129,6 +134,7 @@ MAIN: {
     $opt_c              = $opt->{c};
     $opt_color          = $opt->{color};
     $opt_column         = $opt->{column};
+    $opt_debug          = $opt->{debug};
     $opt_f              = $opt->{f};
     $opt_g              = $opt->{g};
     $opt_heading        = $opt->{heading};
@@ -147,6 +153,9 @@ MAIN: {
     $opt_underline      = $opt->{underline};
     $opt_v              = $opt->{v};
 
+    if ( $opt_show_types && not( $opt_f || $opt_g ) ) {
+        App::Ack::die( '--show-types can only be used with -f or -g.' );
+    }
 
     if ( $opt_range_start ) {
         ($opt_range_start, undef) = build_regex( $opt_range_start, {} );
@@ -154,6 +163,7 @@ MAIN: {
     if ( $opt_range_end ) {
         ($opt_range_end, undef)   = build_regex( $opt_range_end, {} );
     }
+    $using_ranges = $opt_range_start || $opt_range_end;
 
     $App::Ack::report_bad_filenames = !$opt->{s};
     $App::Ack::ors = $opt->{print0} ? "\0" : "\n";
@@ -165,9 +175,8 @@ MAIN: {
         }
         $opt_color = !App::Ack::output_to_pipe() && $windows_color;
     }
-    if ( not defined $opt_heading and not defined $opt_break  ) {
-        $opt_heading = $opt_break = $opt->{break} = !App::Ack::output_to_pipe();
-    }
+    $opt_heading //= !App::Ack::output_to_pipe();
+    $opt_break //= !App::Ack::output_to_pipe();
 
     if ( defined($opt->{H}) || defined($opt->{h}) ) {
         $opt_show_filename = $opt->{show_filename} = $opt->{H} && !$opt->{h};
@@ -199,6 +208,8 @@ MAIN: {
         $files     = App::Ack::Files->from_stdin();
         $opt_regex //= shift @ARGV;
         ($search_re, $scan_re) = build_regex( $opt_regex, $opt );
+        $stats{search_re} = $search_re;
+        $stats{scan_re} = $scan_re;
     }
     else {
         if ( $opt_f ) {
@@ -207,6 +218,8 @@ MAIN: {
         else {
             $opt_regex //= shift @ARGV;
             ($search_re, $scan_re) = build_regex( $opt_regex, $opt );
+            $stats{search_re} = $search_re;
+            $stats{scan_re} = $scan_re;
         }
         # XXX What is this checking for?
         if ( $search_re && $search_re =~ /\n/ ) {
@@ -242,89 +255,28 @@ MAIN: {
     }
     App::Ack::set_up_pager( $opt->{pager} ) if defined $opt->{pager};
 
-    my $nmatches    = 0;
-    my $total_count = 0;
+    my $nmatches;
+    if ( $opt_f || $opt_g ) {
+        $nmatches = file_loop_fg( $files );
+    }
+    elsif ( $opt_c ) {
+        $nmatches = file_loop_c( $files );
+    }
+    elsif ( $opt_l || $opt_L ) {
+        $nmatches = file_loop_lL( $files );
+    }
+    else {
+        $nmatches = file_loop_normal( $files );
+    }
 
-    set_up_line_context();
+    if ( $opt_debug ) {
+        require List::Util;
+        my @stats = qw( search_re scan_re prescans linescans filematches linematches );
+        my $width = List::Util::max( map { length } @stats );
 
-FILES:
-    while ( defined(my $file = $files->next) ) {
-        if ($is_tracking_context) {
-            set_up_line_context_for_file();
+        for my $stat ( @stats ) {
+            App::Ack::warn( sprintf( '%-*.*s = %s', $width, $width, $stat, $stats{$stat} // 'undef' ) );
         }
-
-        # ack -f
-        if ( $opt_f || $opt_g ) {
-            if ( $opt_show_types ) {
-                App::Ack::show_types( $file );
-            }
-            elsif ( $opt_g ) {
-                print_line_with_options( undef, $file->name, 0, $App::Ack::ors );
-            }
-            else {
-                App::Ack::say( $file->name );
-            }
-            ++$nmatches;
-            last FILES if defined($opt_m) && $nmatches >= $opt_m;
-        }
-        # ack -c
-        elsif ( $opt_c ) {
-            my $matches_for_this_file = count_matches_in_file( $file );
-
-            if ( not $opt_show_filename ) {
-                $total_count += $matches_for_this_file;
-                next FILES;
-            }
-
-            if ( !$opt_l || $matches_for_this_file > 0) {
-                if ( $opt_show_filename ) {
-                    App::Ack::say( $file->name, ':', $matches_for_this_file );
-                }
-                else {
-                    App::Ack::say( $matches_for_this_file );
-                }
-            }
-        }
-        # ack -l, ack -L
-        elsif ( $opt_l || $opt_L ) {
-            my $is_match = count_matches_in_file( $file, 1 );
-
-            if ( $opt_L ? !$is_match : $is_match ) {
-                App::Ack::say( $file->name );
-                ++$nmatches;
-
-                last FILES if $opt_1;
-                last FILES if defined($opt_m) && $nmatches >= $opt_m;
-            }
-        }
-        # Normal match-showing ack
-        else {
-            # Tells if the file needs a line-by-line scan.  This is a big
-            # optimization because if you can tell from the outset that the pattern
-            # is not found in the file at all, then there's no need to do the
-            # line-by-line iteration.
-            # Slurp up an entire file up to 10M, see if there are any matches
-            # in it, and if so, let us know so we can iterate over it directly.
-            my $needs_line_scan = 1;
-            if ( !$opt_passthru && !$opt_v ) {
-                if ( $file->may_be_present( $scan_re ) ) {
-                    $file->reset();
-                }
-                else {
-                    $needs_line_scan = 0;
-                }
-            }
-            if ( $needs_line_scan ) {
-                $nmatches += print_matches_in_file( $file );
-            }
-            if ( $opt_1 && $nmatches ) {
-                last FILES;
-            }
-        }
-    }   # while file->next
-
-    if ( $opt_c && !$opt_show_filename ) {
-        App::Ack::print( $total_count, "\n" );
     }
 
     close $App::Ack::fh;
@@ -333,6 +285,82 @@ FILES:
 }
 
 # End of MAIN
+
+sub file_loop_fg {
+    my $files = shift;
+
+    my $nmatches = 0;
+    while ( defined( my $file = $files->next ) ) {
+        if ( $opt_show_types ) {
+            App::Ack::show_types( $file );
+        }
+        elsif ( $opt_g ) {
+            print_line_with_options( undef, $file->name, 0, $App::Ack::ors );
+        }
+        else {
+            App::Ack::say( $file->name );
+        }
+        ++$nmatches;
+        last if defined($opt_m) && ($nmatches >= $opt_m);
+    }
+
+    return $nmatches;
+}
+
+
+sub file_loop_c {
+    my $files = shift;
+
+    my $total_count = 0;
+    while ( defined( my $file = $files->next ) ) {
+        my $matches_for_this_file = count_matches_in_file( $file );
+
+        if ( not $opt_show_filename ) {
+            $total_count += $matches_for_this_file;
+            next;
+        }
+
+        if ( !$opt_l || $matches_for_this_file > 0 ) {
+            if ( $opt_show_filename ) {
+                my $display_filename = $file->name;
+                if ( $opt_color ) {
+                    $display_filename = Term::ANSIColor::colored($display_filename, $ENV{ACK_COLOR_FILENAME});
+                }
+                App::Ack::say( $display_filename, ':', $matches_for_this_file );
+            }
+            else {
+                App::Ack::say( $matches_for_this_file );
+            }
+        }
+    }
+
+    if ( !$opt_show_filename ) {
+        App::Ack::say( $total_count );
+    }
+
+    return;
+}
+
+
+sub file_loop_lL {
+    my $files = shift;
+
+    my $nmatches = 0;
+    while ( defined( my $file = $files->next ) ) {
+        my $is_match = count_matches_in_file( $file, 1 );
+
+        if ( $opt_L ? !$is_match : $is_match ) {
+            App::Ack::say( $file->name );
+            ++$nmatches;
+
+            last if $opt_1;
+            last if defined($opt_m) && ($nmatches >= $opt_m);
+        }
+    }
+
+    return $nmatches;
+}
+
 
 sub _compile_descend_filter {
     my ( $opt ) = @_;
@@ -503,10 +531,31 @@ sub build_regex {
 
     defined $str or App::Ack::die( 'No regular expression found.' );
 
+    if ( !$opt->{Q} ) {
+        # Compile the regex to see if it dies or throws warnings.
+        local $SIG{__WARN__} = sub { die @_ };  # Anything that warns becomes a die.
+        my $scratch_regex = eval { qr/$str/ };
+        if ( not $scratch_regex ) {
+            my $err = $@;
+            chomp $err;
+
+            if ( $err =~ m{^(.+?); marked by <-- HERE in m/(.+?) <-- HERE} ) {
+                my ($why, $where) = ($1,$2);
+                my $pointy = ' ' x (6+length($where)) . '^---HERE';
+                App::Ack::die( "Invalid regex '$str'\nRegex: $str\n$pointy $why" );
+            }
+            else {
+                App::Ack::die( "Invalid regex '$str'\n$err" );
+            }
+        }
+    }
+
     # Check for lowercaseness before we do any modifications.
     my $regex_is_lc = App::Ack::is_lowercase( $str );
 
     $str = quotemeta( $str ) if $opt->{Q};
+
+    my $scan_str = $str;
 
     # Whole words only.
     if ( $opt->{w} ) {
@@ -545,15 +594,15 @@ sub build_regex {
     }
 
     if ( $opt->{i} || ($opt->{S} && $regex_is_lc) ) {
-        $str = "(?i)$str";
+        $_ = "(?i)$_" for ( $str, $scan_str );
     }
 
-    my $scan_re = undef;
-    my $re = eval { qr/$str/ };
-    if ( $re ) {
-        if ( $str !~ /\$/ ) {
+    my $scan_regex = undef;
+    my $regex = eval { qr/$str/ };
+    if ( $regex ) {
+        if ( $scan_str !~ /\$/ ) {
             # No line_scan is possible if there's a $ in the regex.
-            $scan_re = eval { qr/$str/m };
+            $scan_regex = eval { qr/$scan_str/m };
         }
     }
     else {
@@ -562,8 +611,7 @@ sub build_regex {
         App::Ack::die( "Invalid regex '$str':\n  $err" );
     }
 
-
-    return ($re, $scan_re);
+    return ($regex, $scan_regex);
 }
 
 my $match_colno;
@@ -586,10 +634,12 @@ my $after_context_pending;
 my $printed_lineno;
 
 my $is_first_match;
-state $has_printed_something = 0;
+state $has_printed_from_any_file = 0;
 
-# Set up context tracking variables.
-sub set_up_line_context {
+
+sub file_loop_normal {
+    my $files = shift;
+
     $n_before_ctx_lines = $opt_output ? 0 : ($opt_B || 0);
     $n_after_ctx_lines  = $opt_output ? 0 : ($opt_A || 0);
 
@@ -600,19 +650,35 @@ sub set_up_line_context {
 
     $is_first_match = 1;
 
-    return;
-}
-
-# Adjust context tracking variables when entering a new file.
-sub set_up_line_context_for_file {
-    $printed_lineno = 0;
-    $after_context_pending = 0;
-    if ( $opt_heading ) {
-        $is_first_match = 1;
+    my $nmatches = 0;
+    while ( defined( my $file = $files->next ) ) {
+        if ($is_tracking_context) {
+            $printed_lineno = 0;
+            $after_context_pending = 0;
+            if ( $opt_heading ) {
+                $is_first_match = 1;
+            }
+        }
+        my $needs_line_scan = 1;
+        if ( !$opt_passthru && !$opt_v ) {
+            $stats{prescans}++;
+            if ( $file->may_be_present( $scan_re ) ) {
+                $file->reset();
+            }
+            else {
+                $needs_line_scan = 0;
+            }
+        }
+        if ( $needs_line_scan ) {
+            $stats{linescans}++;
+            $nmatches += print_matches_in_file( $file );
+        }
+        last if $opt_1 && $nmatches;
     }
 
-    return;
+    return $nmatches;
 }
+
 
 sub print_matches_in_file {
     my $file = shift;
@@ -621,7 +687,7 @@ sub print_matches_in_file {
     my $nmatches  = 0;
     my $filename  = $file->name;
 
-    my $has_printed_for_this_file = 0;
+    my $has_printed_from_this_file = 0;
 
     my $fh = $file->open;
     if ( !$fh ) {
@@ -642,7 +708,7 @@ sub print_matches_in_file {
 
         $after_context_pending = 0;
 
-        my ($using_ranges, $in_range) = range_setup();
+        my $in_range = range_setup();
 
         while ( <$fh> ) {
             chomp;
@@ -665,8 +731,9 @@ sub print_matches_in_file {
             }
 
             if ( $does_match && $max_count ) {
-                if ( !$has_printed_for_this_file ) {
-                    if ( $opt_break && $has_printed_something ) {
+                if ( !$has_printed_from_this_file ) {
+                    $stats{filematches}++;
+                    if ( $opt_break && $has_printed_from_any_file ) {
                         App::Ack::print_blank_line();
                     }
                     if ( $opt_show_filename && $opt_heading ) {
@@ -674,7 +741,8 @@ sub print_matches_in_file {
                     }
                 }
                 print_line_with_context( $filename, $_, $. );
-                $has_printed_for_this_file = 1;
+                $has_printed_from_this_file = 1;
+                $stats{linematches}++;
                 $nmatches++;
                 $max_count--;
             }
@@ -700,7 +768,7 @@ sub print_matches_in_file {
     elsif ( $opt_passthru ) {
         local $_ = undef;
 
-        my ($using_ranges, $in_range) = range_setup();
+        my $in_range = range_setup();
 
         while ( <$fh> ) {
             chomp;
@@ -712,25 +780,25 @@ sub print_matches_in_file {
                 if ( !$opt_v ) {
                     $match_colno = $-[0] + 1;
                 }
-                if ( !$has_printed_for_this_file ) {
-                    if ( $opt_break && $has_printed_something ) {
+                if ( !$has_printed_from_this_file ) {
+                    if ( $opt_break && $has_printed_from_any_file ) {
                         App::Ack::print_blank_line();
                     }
                     if ( $opt_show_filename && $opt_heading ) {
                         App::Ack::say( $display_filename );
                     }
                 }
-                print_line_with_context( $filename, $_, $. );
-                $has_printed_for_this_file = 1;
+                print_line_with_options( $filename, $_, $., ':' );
+                $has_printed_from_this_file = 1;
                 $nmatches++;
                 $max_count--;
             }
             else {
-                if ( $opt_break && !$has_printed_for_this_file && $has_printed_something ) {
+                if ( $opt_break && !$has_printed_from_this_file && $has_printed_from_any_file ) {
                     App::Ack::print_blank_line();
                 }
-                print_line_with_options( $filename, $_, $., ':', 1 );
-                $has_printed_for_this_file = 1;
+                print_line_with_options( $filename, $_, $., '-', 1 );
+                $has_printed_from_this_file = 1;
             }
 
             $in_range = 0 if ( $using_ranges && $in_range && $opt_range_end && /$opt_range_end/o );
@@ -742,7 +810,7 @@ sub print_matches_in_file {
         local $_ = undef;
 
         $match_colno = undef;
-        my ($using_ranges, $in_range) = range_setup();
+        my $in_range = range_setup();
 
         while ( <$fh> ) {
             chomp;
@@ -751,8 +819,8 @@ sub print_matches_in_file {
 
             if ( $in_range ) {
                 if ( !/$search_re/o ) {
-                    if ( !$has_printed_for_this_file ) {
-                        if ( $opt_break && $has_printed_something ) {
+                    if ( !$has_printed_from_this_file ) {
+                        if ( $opt_break && $has_printed_from_any_file ) {
                             App::Ack::print_blank_line();
                         }
                         if ( $opt_show_filename && $opt_heading ) {
@@ -760,7 +828,7 @@ sub print_matches_in_file {
                         }
                     }
                     print_line_with_context( $filename, $_, $. );
-                    $has_printed_for_this_file = 1;
+                    $has_printed_from_this_file = 1;
                     $nmatches++;
                     $max_count--;
                 }
@@ -775,7 +843,7 @@ sub print_matches_in_file {
         local $_ = undef;
 
         my $last_match_lineno;
-        my ($using_ranges, $in_range) = range_setup();
+        my $in_range = range_setup();
 
         while ( <$fh> ) {
             chomp;
@@ -786,8 +854,9 @@ sub print_matches_in_file {
                 $match_colno = undef;
                 if ( /$search_re/o ) {
                     $match_colno = $-[0] + 1;
-                    if ( !$has_printed_for_this_file ) {
-                        if ( $opt_break && $has_printed_something ) {
+                    if ( !$has_printed_from_this_file ) {
+                        $stats{filematches}++;
+                        if ( $opt_break && $has_printed_from_any_file ) {
                             App::Ack::print_blank_line();
                         }
                         if ( $opt_show_filename && $opt_heading ) {
@@ -800,14 +869,15 @@ sub print_matches_in_file {
                                 App::Ack::print_blank_line();
                             }
                         }
-                        elsif ( !$opt_break && $has_printed_something ) {
+                        elsif ( !$opt_break && $has_printed_from_any_file ) {
                             App::Ack::print_blank_line();
                         }
                     }
                     s/[\r\n]+$//;
                     print_line_with_options( $filename, $_, $., ':' );
-                    $has_printed_for_this_file = 1;
+                    $has_printed_from_this_file = 1;
                     $nmatches++;
+                    $stats{linematches}++;
                     $max_count--;
                     $last_match_lineno = $.;
                 }
@@ -826,7 +896,7 @@ sub print_matches_in_file {
 sub print_line_with_options {
     my ( $filename, $line, $lineno, $separator, $skip_coloring ) = @_;
 
-    $has_printed_something = 1;
+    $has_printed_from_any_file = 1;
     $printed_lineno = $lineno;
 
     my @line_parts;
@@ -1007,7 +1077,7 @@ sub count_matches_in_file {
     if ( $do_scan ) {
         $file->reset();
 
-        my ($using_ranges, $in_range) = range_setup();
+        my $in_range = range_setup();
 
         my $fh = $file->{fh};
         if ( $using_ranges ) {
@@ -1032,18 +1102,15 @@ sub count_matches_in_file {
                 }
             }
         }
-        $file->close;
     }
+    $file->close;
 
     return $nmatches;
 }
 
 
 sub range_setup {
-    my $using_ranges = $opt_range_start || $opt_range_end;
-    my $in_range = !$using_ranges || (!$opt_range_start && $opt_range_end);
-
-    return ($using_ranges, $in_range);
+    return !$using_ranges || (!$opt_range_start && $opt_range_end);
 }
 
 
@@ -1637,20 +1704,24 @@ Outputs the filetypes that ack associates with each file.
 
 Works with B<-f> and B<-g> options.
 
-=item B<--type=[no]TYPE>
+=item B<-t TYPE>, B<--type=TYPE>, B<--TYPE>
 
-Specify the types of files to include or exclude from a search.
+Specify the types of files to include in the search.
 TYPE is a filetype, like I<perl> or I<xml>.  B<--type=perl> can
-also be specified as B<--perl>, and B<--type=noperl> can be done
-as B<--noperl>.
+also be specified as B<--perl>, although this is deprecated.
 
-If a file is of both type "foo" and "bar", specifying --foo and
---nobar will exclude the file, because an exclusion takes precedence
-over an inclusion.
+Type inclusions can be repeated and are ORed together.
 
-Type specifications can be repeated and are ORed together.
+See I<ack --help-types> for a list of valid types.
 
-See I<ack --help=types> for a list of valid types.
+=item B<-T TYPE>, B<--type=noTYPE>, B<--noTYPE>
+
+Specifies the type of files to exclude from the search.  B<--type=noperl>
+can be done as B<--noperl>, although this is deprecated.
+
+If a file is of both type "foo" and "bar", specifying both B<--type=foo>
+and B<--type=nobar> will exclude the file, because an exclusion takes
+precedence over an inclusion.
 
 =item B<--type-add I<TYPE>:I<FILTER>:I<ARGS>>
 
@@ -1767,7 +1838,7 @@ a filetype of "cobol", you can specify I<--type=cobol> or simply
 I<--cobol>.  File types must be at least two characters long.  This
 is why the C language is I<--cc> and the R language is I<--rr>.
 
-I<ack --perl foo> searches for foo in all perl files. I<ack --help=types>
+I<ack --perl foo> searches for foo in all perl files. I<ack --help-types>
 tells you, that perl files are files ending
 in .pl, .pm, .pod or .t. So what if you would like to include .xs
 files as well when searching for --perl files? I<ack --type-add perl:ext:xs --perl foo>
@@ -2251,6 +2322,8 @@ mailing list.
 How appropriate to have I<ack>nowledgements!
 
 Thanks to everyone who has contributed to ack in any way, including
+Dan Book,
+Tomasz Konojacki,
 Salomon Smeke,
 M. Scott Ford,
 Anders Eriksson,
@@ -2373,7 +2446,7 @@ Andy Lester, C<< <andy at petdance.com> >>
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2005-2019 Andy Lester.
+Copyright 2005-2020 Andy Lester.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the Artistic License v2.0.
@@ -2393,9 +2466,8 @@ use strict;
 our $VERSION;
 our $COPYRIGHT;
 BEGIN {
-    use version;
-    $VERSION = version->declare( 'v3.1.1' ); # Check https://beyondgrep.com/ for updates
-    $COPYRIGHT = 'Copyright 2005-2019 Andy Lester.';
+    $VERSION = 'v3.4.0'; # Check https://beyondgrep.com/ for updates
+    $COPYRIGHT = 'Copyright 2005-2020 Andy Lester.';
 }
 our $STANDALONE = 0;
 our $ORIGINAL_PROGRAM_NAME;
@@ -2565,7 +2637,6 @@ sub _pic_decode {
 
 
 sub show_help {
-    my $ack_ver = sprintf( 'v%vd', $VERSION );
     App::Ack::print( <<"END_OF_HELP" );
 Usage: ack [OPTION]... PATTERN [FILES OR DIRECTORIES]
 
@@ -2578,7 +2649,16 @@ or if one of them is "-".
 Default switches may be specified in an .ackrc file. If you want no dependency
 on the environment, turn it off with --noenv.
 
-Example: ack -i select
+File select actions:
+  -f                            Only print the files selected, without
+                                searching.  The PATTERN must not be specified.
+  -g                            Same as -f, but only select files matching
+                                PATTERN.
+
+File listing actions:
+  -l, --files-with-matches      Print filenames with at least one match
+  -L, --files-without-matches   Print filenames with no matches
+  -c, --count                   Print filenames and count of matching lines
 
 Searching:
   -i, --ignore-case             Ignore case distinctions in PATTERN
@@ -2595,8 +2675,6 @@ Searching:
   --match PATTERN               Specify PATTERN explicitly. Typically omitted.
 
 Search output:
-  -l, --files-with-matches      Only print filenames containing matches
-  -L, --files-without-matches   Only print filenames with no matches
   --output=expr                 Output the evaluation of expr for each line
                                 (turns off text highlighting)
   -o                            Show only the part of a line matching PATTERN
@@ -2607,7 +2685,6 @@ Search output:
   -H, --with-filename           Print the filename for each match (default:
                                 on unless explicitly searching a single file)
   -h, --no-filename             Suppress the prefixing filename on output
-  -c, --count                   Show number of lines matching per file
   --[no]column                  Show the column number of the first match
 
   -A NUM, --after-context=NUM   Print NUM lines of trailing context after
@@ -2655,10 +2732,6 @@ File presentation:
 
 
 File finding:
-  -f                            Only print the files selected, without
-                                searching.  The PATTERN must not be specified.
-  -g                            Same as -f, but only select files matching
-                                PATTERN.
   --sort-files                  Sort the found files lexically.
   --show-types                  Show which types each file has.
   --files-from=FILE             Read the list of files to search from FILE.
@@ -2673,9 +2746,9 @@ File inclusion/exclusion:
   --[no]follow                  Follow symlinks.  Default is off.
 
 File type inclusion/exclusion:
-  --type=X                      Include only X files, where X is a recognized
-                                filetype, e.g. --php, --ruby
-  --type=noX                    Exclude X files, e.g. --nophp, --no-ruby.
+  -t X, --type=X                Include only X files, where X is a filetype,
+                                e.g. python, html, markdown, etc
+  -T X, --type=noX              Exclude X files, where X is a filetype.
   -k, --known-types             Include only files of types that ack recognizes.
   --help-types                  Display all known types, and how they're defined.
 
@@ -2723,7 +2796,7 @@ ack's home page is at https://beyondgrep.com/
 
 The full ack manual is available by running "ack --man".
 
-This is version $ack_ver of ack.  Run "ack --version" for full version info.
+This is version $App::Ack::VERSION of ack.  Run "ack --version" for full version info.
 END_OF_HELP
 
     return;
@@ -2735,12 +2808,12 @@ sub show_help_types {
     App::Ack::print( <<'END_OF_HELP' );
 Usage: ack [OPTION]... PATTERN [FILES OR DIRECTORIES]
 
-The following is the list of filetypes supported by ack.  You can
-specify a file type with the --type=TYPE format, or the --TYPE
-format.  For example, both --type=perl and --perl work.
+The following is the list of filetypes supported by ack.  You can specify a
+filetype to include with -t TYPE or --type=TYPE.  You can exclude a
+filetype with -T TYPE or --type=noTYPE.
 
-Note that some extensions may appear in multiple types.  For example,
-.pod files are both Perl and Parrot.
+Note that some files may appear in multiple types.  For example, a file
+called Rakefile is both Ruby (--type=ruby) and Rakefile (--type=rakefile).
 
 END_OF_HELP
 
@@ -2756,7 +2829,7 @@ END_OF_HELP
         if ( ref $ext_list ) {
             $ext_list = join( '; ', map { $_->to_string } @{$ext_list} );
         }
-        App::Ack::print( sprintf( "    --[no]%-*.*s %s\n", $maxlen, $maxlen, $type, $ext_list ) );
+        App::Ack::print( sprintf( "    %-*.*s %s\n", $maxlen, $maxlen, $type, $ext_list ) );
     }
 
     return;
@@ -2917,12 +2990,11 @@ sub get_version_statement {
         $this_perl .= $ext unless $this_perl =~ m/$ext$/i;
     }
     my $perl_ver = sprintf( 'v%vd', $^V );
-    my $ack_ver  = sprintf( 'v%vd', $VERSION );
 
     my $build_type = $App::Ack::STANDALONE ? 'standalone version' : 'standard build';
 
     return <<"END_OF_VERSION";
-ack $ack_ver ($build_type)
+ack $App::Ack::VERSION ($build_type)
 Running under Perl $perl_ver at $this_perl
 
 $copyright
@@ -3170,6 +3242,15 @@ sub _options_block {
 # https://www.haskell.org/cabal/users-guide/installing-packages.html
 --ignore-directory=is:.cabal-sandbox
 
+# Python caches
+# https://docs.python.org/3/tutorial/modules.html
+--ignore-directory=is:__pycache__
+--ignore-directory=is:.pytest_cache
+
+# macOS Finder remnants
+--ignore-directory=is:__MACOSX
+--ignore-file=is:.DS_Store
+
 ### Files to ignore
 
 # Backup files
@@ -3179,11 +3260,11 @@ sub _options_block {
 # Emacs swap files
 --ignore-file=match:/^#.+#$/
 
-# vi/vim swap files http://vim.org/
---ignore-file=match:/[._].*\.swp$/
+# vi/vim swap files https://www.vim.org/
+--ignore-file=match:/[._].*[.]swp$/
 
 # core dumps
---ignore-file=match:/core\.\d+$/
+--ignore-file=match:/core[.]\d+$/
 
 # minified Javascript
 --ignore-file=match:/[.-]min[.]js$/
@@ -3206,6 +3287,14 @@ sub _options_block {
 # Common archives, as an optimization
 --ignore-file=ext:gz,tar,tgz,zip
 
+# Python compiles modules
+--ignore-file=ext:pyc,pyd,pyo
+
+# C extensions
+--ignore-file=ext:so
+
+# Compiled gettext files
+--ignore-file=ext:mo
 
 ### Filetypes defined
 
@@ -3318,7 +3407,7 @@ sub _options_block {
 --type-add=gsp:ext:gsp
 
 # Haskell
-# http://www.haskell.org/
+# https://www.haskell.org/
 --type-add=haskell:ext:hs,lhs
 
 # HTML
@@ -3381,12 +3470,8 @@ sub _options_block {
 # https://ocaml.org/
 --type-add=ocaml:ext:ml,mli,mll,mly
 
-# Parrot
-# http://www.parrot.org/
---type-add=parrot:ext:pir,pasm,pmc,ops,pod,pg,tg
-
 # Perl
-# http://perl.org/
+# https://perl.org/
 --type-add=perl:ext:pl,pm,pod,t,psgi
 --type-add=perl:firstlinematch:/^#!.*\bperl/
 
@@ -3415,7 +3500,7 @@ sub _options_block {
 --type-add=rr:ext:R
 
 # reStructured Text
-# http://docutils.sourceforge.net/rst.html
+# https://docutils.sourceforge.io/rst.html
 --type-add=rst:ext:rst
 
 # Ruby
@@ -3480,6 +3565,10 @@ sub _options_block {
 # Template Toolkit (Perl)
 # http//template-toolkit.org/
 --type-add=ttml:ext:tt,tt2,ttml
+
+# TOML
+# https://toml.io/
+--type-add=toml:ext:toml
 
 # Typescript
 # https://www.typescriptlang.org/
@@ -3616,7 +3705,7 @@ use warnings;
 use 5.010;
 
 use File::Spec 3.00 ();
-use Getopt::Long 2.38 ();
+use Getopt::Long 2.39 ();
 use Text::ParseWords 3.1 ();
 
 sub opt_parser {
@@ -3823,6 +3912,30 @@ sub get_arg_spec {
     my ( $opt, $extra_specs ) = @_;
 
 
+    sub _type_handler {
+        my ( $getopt, $value ) = @_;
+
+        my $cb_value = 1;
+        if ( $value =~ s/^no// ) {
+            $cb_value = 0;
+        }
+
+        my $callback;
+        {
+            no warnings;
+            $callback = $extra_specs->{ $value . '!' };
+        }
+
+        if ( $callback ) {
+            $callback->( $getopt, $cb_value );
+        }
+        else {
+            App::Ack::die( "Unknown type '$value'" );
+        }
+
+        return;
+    }
+
     return {
         1                   => sub { $opt->{1} = $opt->{m} = 1 },
         'A|after-context:-1'  => sub { shift; $opt->{A} = _context_value(shift) },
@@ -3837,6 +3950,7 @@ sub get_arg_spec {
         'color-lineno=s'    => \$ENV{ACK_COLOR_LINENO},
         'column!'           => \$opt->{column},
         'create-ackrc'      => sub { say for ( '--ignore-ack-defaults', App::Ack::ConfigDefault::options() ); exit; },
+        'debug'             => \$opt->{debug},
         'env!'              => sub {
             my ( undef, $value ) = @_;
 
@@ -3898,23 +4012,8 @@ sub get_arg_spec {
         'show-types'        => \$opt->{show_types},
         'S|smart-case!'     => sub { my (undef,$value) = @_; $opt->{S} = $value; $opt->{i} = 0 if $value; },
         'sort-files'        => \$opt->{sort_files},
-        'type=s'            => sub {
-            my ( $getopt, $value ) = @_;
-
-            my $cb_value = 1;
-            if ( $value =~ s/^no// ) {
-                $cb_value = 0;
-            }
-
-            my $callback = $extra_specs->{ $value . '!' };
-
-            if ( $callback ) {
-                $callback->( $getopt, $cb_value );
-            }
-            else {
-                App::Ack::die( "Unknown type '$value'" );
-            }
-        },
+        't|type=s'          => \&_type_handler,
+        'T=s'               => sub { my ($getopt,$value) = @_; $value="no$value"; _type_handler($getopt,$value); },
         'underline!'        => \$opt->{underline},
         'v|invert-match'    => \$opt->{v},
         'w|word-regexp'     => \$opt->{w},
@@ -4183,7 +4282,7 @@ sub process_args {
 
     my $type_specs = _process_filetypes(\%opt, $arg_sources);
 
-    _check_for_mutually_exclusive_options( $type_specs );
+    _check_for_mutex_options( $type_specs );
 
     _process_other(\%opt, $type_specs, $arg_sources);
     while ( @{$arg_sources} ) {
@@ -4294,8 +4393,8 @@ sub read_rcfile {
 }
 
 
-# Verifies no mutually-exclusive options were passed.  Dies if they were.
-sub _check_for_mutually_exclusive_options {
+# Verifies no mutex options were passed.  Dies if they were.
+sub _check_for_mutex_options {
     my $type_specs = shift;
 
     my $mutex = mutex_options();
@@ -4310,7 +4409,7 @@ sub _check_for_mutually_exclusive_options {
             if ( $mutex->{$i}{$j} ) {
                 my $x = $raw->[ $used->{$i} ];
                 my $y = $raw->[ $used->{$j} ];
-                App::Ack::die( "Options '$x' and '$y' are mutually exclusive" );
+                App::Ack::die( "Options '$x' and '$y' can't be used together." );
             }
         }
     }
@@ -4408,7 +4507,7 @@ sub _options_used {
 
 
 sub mutex_options {
-    # This list is machine-generated by crank-mutex.  Do not modify it by hand.
+    # This list is machine-generated by dev/crank-mutex.  Do not modify it by hand.
 
     return {
         1 => {
@@ -4523,6 +4622,7 @@ sub mutex_options {
             c => 1,
             column => 1,
             f => 1,
+            'files-from' => 1,
             g => 1,
             group => 1,
             h => 1,
@@ -4538,6 +4638,11 @@ sub mutex_options {
             v => 1,
             x => 1,
         },
+        'files-from' => {
+            f => 1,
+            g => 1,
+            x => 1,
+        },
         g => {
             A => 1,
             B => 1,
@@ -4548,6 +4653,7 @@ sub mutex_options {
             c => 1,
             column => 1,
             f => 1,
+            'files-from' => 1,
             g => 1,
             group => 1,
             h => 1,
@@ -4634,6 +4740,7 @@ sub mutex_options {
             p => 1,
             passthru => 1,
             'show-types' => 1,
+            v => 1,
         },
         output => {
             A => 1,
@@ -4651,6 +4758,7 @@ sub mutex_options {
             passthru => 1,
             'show-types' => 1,
             u => 1,
+            v => 1,
         },
         p => {
             A => 1,
@@ -4681,6 +4789,7 @@ sub mutex_options {
             o => 1,
             output => 1,
             p => 1,
+            v => 1,
         },
         'show-types' => {
             L => 1,
@@ -4697,6 +4806,9 @@ sub mutex_options {
             L => 1,
             column => 1,
             f => 1,
+            o => 1,
+            output => 1,
+            passthru => 1,
         },
         'with-filename' => {
             L => 1,
@@ -4704,9 +4816,11 @@ sub mutex_options {
         },
         x => {
             f => 1,
+            'files-from' => 1,
             g => 1,
         },
     };
+
 }   # End of mutex_options()
 
 
@@ -4770,6 +4884,14 @@ sub open {
 sub may_be_present {
     my $self  = shift;
     my $regex = shift;
+
+    # Tells if the file needs a line-by-line scan.  This is a big
+    # optimization because if you can tell from the outset that the pattern
+    # is not found in the file at all, then there's no need to do the
+    # line-by-line iteration.
+
+    # Slurp up an entire file up to 10M, see if there are any matches
+    # in it, and if so, let us know so we can iterate over it directly.
 
     # The $regex may be undef if it had a "$" in it, and is therefore unsuitable for this heuristic.
 

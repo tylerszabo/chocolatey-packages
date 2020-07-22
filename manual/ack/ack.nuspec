@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
   <metadata>
     <id>ack</id>
-    <version>3.1.1</version>
+    <version>3.4.0</version>
     <packageSourceUrl>https://github.com/tylerszabo/chocolatey-packages</packageSourceUrl>
     <owners>Tyler Szabo</owners>
 
@@ -10,8 +10,8 @@
     <authors>Andy Lester</authors>
     <projectUrl>https://beyondgrep.com/</projectUrl>
     <iconUrl>https://github.com/tylerszabo/chocolatey-packages/raw/5509c08b61c2272b7230370fe1801b78922786aa/ack/Ack.png</iconUrl>
-    <copyright>Copyright 2005-2019 Andy Lester</copyright>
-    <licenseUrl>https://github.com/beyondgrep/ack3/blob/v3.1.1/LICENSE.md</licenseUrl>
+    <copyright>Copyright 2005-2020 Andy Lester</copyright>
+    <licenseUrl>https://github.com/beyondgrep/ack3/blob/v3.4.0/LICENSE.md</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <projectSourceUrl>https://github.com/beyondgrep/ack3</projectSourceUrl>
     <docsUrl>https://beyondgrep.com/documentation/</docsUrl>
@@ -24,102 +24,172 @@
 Designed for programmers with large heterogeneous trees of source code, ack is written purely in portable Perl 5 and takes advantage of the power of Perl's regular expressions.
     </description>
     <releaseNotes><![CDATA[
-# Release notes for ack 3.000
+From: https://beyondgrep.com/changes.txt
 
-# New features
+v3.4.0      Mon Jun 29 23:04:18 CDT 2020
+========================================
+[FEATURES]
+When calling "ack -c" to get a list of filenames and counts, the filename
+would not be colored like when getting normal search results.  Now it will.
+Thanks to Matthew Hughes for adding the feature, and Ophir Lifshitz for the
+suggestion. (GH#282)
 
-ack 3 is a greplike tool optimized for searching large code trees.
+Added --toml for the TOML filetype. (GH#306)
 
-Improvements over ack 2 include:
+[FIXES]
+The test t/ack-x.t would fail when run as root. Now it is skipped. Thanks,
+Michael LaGrasta. (GH#217)
 
-* Improved `-w` means more accurate searching for words.
 
-* `-w` option will warn if your pattern does not lend itself to
-word matching.
+v3.3.1      Mon Jan 13 10:27:16 CST 2020
+========================================
+[FIXES]
+Some regexes would be shown as invalid when used with the -Q option.  Since
+the -Q tells ack to treat the regex as a literal, this shouldn't be
+possible.  (GH#294)
 
-* `-i`, `-I` and `--smart-case`
 
-* `--proximate=N` option
+v3.3.0      Sat Dec 28 16:00:21 CST 2019
+========================================
+[FEATURES]
+The error message ack displays when the regex passed is invalid has been
+improved.  The message is more readable and includes a pointer to the
+offending part of the regex.  For example:
 
-* `--underline` option for showing matches without color coding.
+    $ ack 'status: (open|closed|in progress'
+    ack: Invalid regex 'status: (open|closed|in progress'
+    Regex: status: (open|closed|in progress
+                   ^---HERE Unmatched ( in regex
 
-* Added `--pod` and `--markdown`.
+Added many new file and directory exclusions to speed up file selection.
+* Python's *.pyc, *.pyd and *.pyo compiled files
+* Python's __pycache__ and .pytest_cache directories
+* Linux *.so shared object files
+* Windows dynamic-link library *.dll files
+* gettext compiled *.mo translation files
+* macOS's __MACOSX directories and .DS_Store files
 
-* Added `GNUmakefile` to the list of makefile specs.
+Reorganized the --help menu to put "action" options like -f, -g and -l at
+the top of the listing.
 
-* Added `-S` as a synonym for `--smart-case`.
+The --show-types option only has an effect with -f or -g.  ack will now
+tell you if you use --show-types without -f or -g when it will have no
+effect.
 
-* Added many more checks for mutually exclusive command-line options.
+Improved the error message when ack gets passed two options that can't be
+used together.
 
-* Added a filetype for SVG files.
 
-# Bug fixes
+[FIXES]
+Fixed the behavior of --break and --heading.  Using --break would
+implicitly set --noheading, and --heading would implicitly set --nobreak.
 
-* Column numbers were not getting colorized in the output.  Added
-`--color-colno` option and `ACK_COLOR_COLNO` environment variable.
+The following pairs of options don't make sense to use together, and ack will now warn you if you try:
 
-* A pattern that wanted whitespace at the end could match the
-linefeed at the end of a line.  This is no longer possible.
+* -x and --files-from
+* -v and -o
+* -v and --output
+* -v and --passthru
 
-# Incompatibilities with ack 2
+Fixed the minimum version of the Getopt::Long module required. (GH #287)
 
-## ack 3 requires Perl 5.10.1
+The line number and filename separators in --passthru mode now work the
+same as in context (-A/-B/-C) mode.  (GH #291)
 
-ack 2 only needed Perl 5.8.8.  This shouldn't be a problem since 5.10.1
-has been out since 2009.
 
-## -w is fussier
+v3.2.0      Sun Nov  3 22:52:18 CST 2019
+========================================
+[FEATURES]
+Added "-t X" as a short alias for --type=X.
 
-ack 3 will not allow you to use `-w` with a pattern that doesn't begin or
-end with a word character.
+Added "-T X" as a short alias for --type=noX.
 
-## ack 3 no longer highlights capture groups.
+The feature of using the name of the type as an option is deprecated.  For
+example, ack currently lets you use "--perl" instead of "--type=perl" or
+"-t perl",  This is now deprecated and will be removed in a future release.
 
-ack 2 would highlight your capture groups.  For example,
+Removed support for Parrot (--parrot).
 
-    ack '(set|get)_foo_(name|id)'
 
-would highlight the `set` or `get`, and the `name` or `id`, but not the
-full `set_user_id` that was matched.
+v3.1.3      Sat Oct 19 19:23:48 CDT 2019
+========================================
+No changes to functionality.  Fixed a problem with version numbers.
+Thanks to Dan Book for his help.
+See https://github.com/beyondgrep/ack3/commit/b3c43d44109dea6ebc0753107a8e85a6b322f4ca
 
-This feature was too confusing and has been removed.  Now, the entire
-matching string is highlighted.
 
-## ack 3's --output allows fewer special variables
+v3.1.2      Mon Oct 14 21:47:51 CDT 2019
+========================================
+[SPEEDUP]
+Using -w with a pattern that ended with a metacharacter would be slower
+than it should be because it would skip an optimization. Now it's fixed.
+(GH #181, #251)
 
-In ack 2, you could put any kind of Perl code in the `--output`
-option and it would get `eval`uated at run time, which would let
-you do tricky stuff like this gem from Mark Fowler
-(http://www.perladvent.org/2014/2014-12-21.html):
+[FIXES]
+Fixed test failures that would sometimes happen on Windows machines because
+of taint mode.  Thanks, Tomasz Konojacki. (GH #235)
 
-    ack --output='$&: @{[ eval "use LWP::Simple; 1" && length LWP::Simple::get($&) ]} bytes' \
-                    'https?://\S+' list.txt
-    http://google.com/: 19529 bytes
-    http://metacpan.org/: 7560 bytes
-    http://www.perladvent.org/: 5562 bytes
+Remove the use of the version.pm module.
 
-This has been a security problem in the past, and so in ack 3 we
-no longer `eval` the contents of `--output`.  You're now restricted
-to the following variables: `$1` thru `$9`, `$_`, `$.`, `$&`, ``$` ``,
-`$'` and `$+`.  You can also embed `\t`, `\n` and `\r` ,
-and `$f` as stand-in for `$filename` in `ack2 --output` .
 
-## ack 3 no longer uses the `ACK_OPTIONS` environment variable
+v3.1.1      Sat Aug 31 22:56:10 CDT 2019
+========================================
+[SPEEDUP]
+Improved the speed up the -l, -L and -c options by pre-scanning the file
+in bulk before doing line-by-line scan. (GH #221)
 
-The `ACK_OPTIONS` variable was used to supply command line arguments to
-ack invocations.  This has been removed.  Use an ackrc file instead.
+ack now uses File::Next 1.18 which calls stat() only once per file or
+directory, instead of sometimes calling it twice.  This should improve the
+time spent traversing directories.
 
-## ack 3 no longer has the `--lines` option
+[FIXES]
+On Windows, patterns with $ to mark the end of the line would not match.
+(GH #229)
 
-The `--lines` option let you select a specific range of lines to print, and
-not match.  There are other better ways to do this (`sed`, for example).
+[DOCUMENTATION]
+Fixed docs that referred to --range-stop instead of --range-end. (GH #228)
 
-## The `--man` option no longer uses perldoc
 
-The `--man` option would use the external `perldoc` program for displaying
-documentation.  However, this was causing portability problems since some
-users might not have it installed.  The downside is that the text rendering
-is not quite as pretty.
+v3.1.0      Thu Aug 22 22:43:15 CDT 2019
+========================================
+[FEATURES]
+Added the --range-start and --range-end options to allow searching only
+ranges of each file. (GH #165)
+
+
+v3.0.3      Tue Aug 20 23:42:02 CDT 2019
+========================================
+[FIXES]
+Made smartcase's check for lowercase patterns smarter.
+
+[DOCUMENTATION]
+Updated many URLs, especially in the config. (GH #223)
+
+
+v3.0.2      Thu Jul  4 21:42:43 CDT 2019
+========================================
+[FIXES]
+ack's smart-case feature would think that a pattern like "select \S+ from"
+is looking for a uppercase letter, and so would not make a case-insensitive
+search.  Now, ack knows that uppercase letters in metacharacters don't
+count as looking for a uppercase letter. (GH #156, 187, 214)
+
+
+v3.0.1      Tue Jun 25 20:47:58 CDT 2019
+========================================
+[FIXES]
+The -s option tells ack not to complain about missing or unreadable files
+it tries to search.  The -s option would not always work in conjection with
+the -x option.  Now it does.  Thanks, Anders Eriksson and M. Scott Ford.
+(GH #175)
+
+ack would die if you specified a --output option that didn't use one
+of Perl's special match variables.  Now it won't.  Thanks, M. Scott
+Ford. (GH #210)
+
+[INTERNALS]
+Added a Dockerfile for use when working on ack development.  Thanks,
+M. Scott Ford. (GH #208)
 ]]></releaseNotes>
 
     <dependencies>
