@@ -19,7 +19,7 @@
     <bugTrackerUrl>https://github.com/beyondgrep/ack3/issues</bugTrackerUrl>
     <tags>ack grep perl beyondgrep</tags>
     <summary>ack is a code-searching tool, similar to grep but optimized for programmers searching large trees of source code. It runs in pure Perl, is highly portable, and runs on any platform that runs Perl.</summary>
-    <description>#ack is a tool like grep, optimized for programmers
+    <description># ack is a tool like grep, optimized for programmers
 
 Designed for programmers with large heterogeneous trees of source code, ack is written purely in portable Perl 5 and takes advantage of the power of Perl's regular expressions.
     </description>
@@ -63,11 +63,11 @@ offending part of the regex.  For example:
 
 Added many new file and directory exclusions to speed up file selection.
 * Python's *.pyc, *.pyd and *.pyo compiled files
-* Python's __pycache__ and .pytest_cache directories
+* Python's \_\_pycache\_\_ and .pytest_cache directories
 * Linux *.so shared object files
 * Windows dynamic-link library *.dll files
 * gettext compiled *.mo translation files
-* macOS's __MACOSX directories and .DS_Store files
+* macOS's \_\_MACOSX directories and .DS_Store files
 
 Reorganized the --help menu to put "action" options like -f, -g and -l at
 the top of the listing.
