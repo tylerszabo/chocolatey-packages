@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
   <metadata>
     <id>jdupes</id>
-    <version>1.18.1</version>
+    <version>1.18.2</version>
     <packageSourceUrl>https://github.com/tylerszabo/chocolatey-packages</packageSourceUrl>
     <owners>Tyler Szabo</owners>
     <title>jdupes</title>
@@ -28,14 +28,11 @@ between the two programs. For example, the -I switch in jdupes means
 "immediately delete files during scanning without prompting the user."
     </description>
     <releaseNotes>
- - Add -X newer/older extfilters to reject files by modification date
- - Fix -X newer/older on Windows by writing a local strptime() substitute
- - Rewrite dedupe code from scratch, probably fixing all dedupe bugs
- - extfilter: add substring match filter for file paths
- - Add -u/--printunique option to print all non-duplicates (unmatched files)
- - Dedupe-blacklisted kernel version check now happens before work is done
- - Build warnings fixed; report any you get (except ENABLE_DEDUPE=1 #warning)
- - New build targets static and static_stripped (for static binary builds)
+  - Add -U/--notravcheck to skip double-traversal safety (for Google Drive FS)
+  - Unified all simple packaging options under a single 'make package' call
+  - Reduce code size on macOS by dropping some Linux-specific code
+
+  This release is basically identical to 1.18.1, except for the new -U/--notravcheck option that was added to disable the double-traversal safety check. This fix has been added to enable recursion on Google Drive File Stream which returns the same device:inode pair for ALL directories for some strange reason. If you don't need -U, don't be in any rush to upgrade.
     </releaseNotes>
   </metadata>
   <files>
