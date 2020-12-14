@@ -2,14 +2,14 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
   <metadata>
     <id>jdupes</id>
-    <version>1.18.2</version>
+    <version>1.19.1</version>
     <packageSourceUrl>https://github.com/tylerszabo/chocolatey-packages</packageSourceUrl>
     <owners>Tyler Szabo</owners>
     <title>jdupes</title>
     <authors>Jody Bruchon</authors>
     <projectUrl>https://github.com/jbruchon/jdupes</projectUrl>
     <copyright>Copyright 2015-2020 Jody Lee Bruchon and contributors</copyright>
-    <licenseUrl>https://github.com/jbruchon/jdupes/blob/v1.18.1/LICENSE</licenseUrl>
+    <licenseUrl>https://github.com/jbruchon/jdupes/blob/v1.19.1/LICENSE</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <projectSourceUrl>https://github.com/jbruchon/jdupes</projectSourceUrl>
     <bugTrackerUrl>https://github.com/jbruchon/jdupes/issues</bugTrackerUrl>
@@ -28,11 +28,24 @@ between the two programs. For example, the -I switch in jdupes means
 "immediately delete files during scanning without prompting the user."
     </description>
     <releaseNotes>
-  - Add -U/--notravcheck to skip double-traversal safety (for Google Drive FS)
-  - Unified all simple packaging options under a single 'make package' call
-  - Reduce code size on macOS by dropping some Linux-specific code
+ - Fix missing space in `---->` hard link inidcator
+ - Fix `-P`/`--print` and `-p`/`--permissions` options
+ - Remove temporary warning when using `-X`
 
-  This release is basically identical to 1.18.1, except for the new -U/--notravcheck option that was added to disable the double-traversal safety check. This fix has been added to enable recursion on Google Drive File Stream which returns the same device:inode pair for ALL directories for some strange reason. If you don't need -U, don't be in any rush to upgrade.
+**WARNING:** `-X`/`--extfilter` **MEANINGS HAVE CHANGED!*8
+**READ* `jdupes -X help` **AND CHECK YOUR SHELL SCRIPTS FOR POSSIBLE PROBLEMS!**
+
+ -  Make -X size[+-=] an inclusion filter instead (CHECK YOUR SHELL SCRIPTS)
+ -  Fix -X noext/onlyext extension matching bugs
+ -  Remove deprecated -x/--xsize option and some undocumented redundant options
+ -  Preserve metadata when doing -B/--dedupe on Apple APFS
+ -  Name sorting is now case-insensitive
+ -  Disable -K/--skiphash which was accidentally left active but doesn't work
+ -  When sorting by modify time and there's a tie, break it using name sorting
+ -  Add Windows XP build support (last supported MSYS2: msys2-i686-20160205)
+ -  Fix building on old GCC versions as seen in Xcode 3.1 (Mac OS X 10.5.8)
+ -  jdupes-standalone has been removed due to falling too far out of sync
+ -  Embedded build date option has been removed
     </releaseNotes>
   </metadata>
   <files>
