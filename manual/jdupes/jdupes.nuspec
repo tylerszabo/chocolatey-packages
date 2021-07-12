@@ -2,14 +2,14 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
   <metadata>
     <id>jdupes</id>
-    <version>1.19.1</version>
+    <version>1.20.0</version>
     <packageSourceUrl>https://github.com/tylerszabo/chocolatey-packages</packageSourceUrl>
     <owners>Tyler Szabo</owners>
     <title>jdupes</title>
     <authors>Jody Bruchon</authors>
     <projectUrl>https://github.com/jbruchon/jdupes</projectUrl>
-    <copyright>Copyright 2015-2020 Jody Lee Bruchon and contributors</copyright>
-    <licenseUrl>https://github.com/jbruchon/jdupes/blob/v1.19.1/LICENSE</licenseUrl>
+    <copyright>Copyright 2015-2021 Jody Lee Bruchon and contributors</copyright>
+    <licenseUrl>https://github.com/jbruchon/jdupes/blob/v1.20.0/LICENSE</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <projectSourceUrl>https://github.com/jbruchon/jdupes</projectSourceUrl>
     <bugTrackerUrl>https://github.com/jbruchon/jdupes/issues</bugTrackerUrl>
@@ -28,24 +28,17 @@ between the two programs. For example, the -I switch in jdupes means
 "immediately delete files during scanning without prompting the user."
     </description>
     <releaseNotes>
- - Fix missing space in `---->` hard link inidcator
- - Fix `-P`/`--print` and `-p`/`--permissions` options
- - Remove temporary warning when using `-X`
+ - SIGUSR1 to toggle -Z now shows an indication of the -Z status change
+ - Fix for error in JSON handling of extended ASCII range (0x80-0xff)
+ - Fix sort when zeroes in names aren't followed by a non-zero digit
+ - Mac builds now output i386+x86_64 fat binaries (if possible)
 
-**WARNING:** `-X`/`--extfilter` **MEANINGS HAVE CHANGED!*8
-**READ* `jdupes -X help` **AND CHECK YOUR SHELL SCRIPTS FOR POSSIBLE PROBLEMS!**
+ - Normalize long option hyphenation (CHECK YOUR SHELL SCRIPTS)
+ - Remove long-deprecated -n/--noempty option (CHECK YOUR SHELL SCRIPTS)
+ - Fix printout for -P/--partial when progress indicator is active
+ - Miscellaneous documentation cleanups/updates
 
- -  Make -X size[+-=] an inclusion filter instead (CHECK YOUR SHELL SCRIPTS)
- -  Fix -X noext/onlyext extension matching bugs
- -  Remove deprecated -x/--xsize option and some undocumented redundant options
- -  Preserve metadata when doing -B/--dedupe on Apple APFS
- -  Name sorting is now case-insensitive
- -  Disable -K/--skiphash which was accidentally left active but doesn't work
- -  When sorting by modify time and there's a tie, break it using name sorting
- -  Add Windows XP build support (last supported MSYS2: msys2-i686-20160205)
- -  Fix building on old GCC versions as seen in Xcode 3.1 (Mac OS X 10.5.8)
- -  jdupes-standalone has been removed due to falling too far out of sync
- -  Embedded build date option has been removed
+This release has a new minor version number due to multiple option changes that can break existing shell scripts (or will in the next release), so **CHECK YOUR SHELL SCRIPTS!**
     </releaseNotes>
   </metadata>
   <files>
